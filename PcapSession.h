@@ -14,7 +14,7 @@ public:
     void closeSession();
 
 private:
-    pcap_t *descriptor{};
+    pcap_t *descriptor {};
 
     pcap_t *initPcapSession(const char *filter, char *device_name);
     void startSniffing(unsigned int packet_count);

@@ -4,8 +4,10 @@
 
 #include "Packet.h"
 
+// public:
+const int Packet::SIZE_ETH = 14; // Size of Ethernet header is always 14
 
-Packet::Packet(const unsigned char *pack, const struct pcap_pkthdr *hdr){
+Packet::Packet(const unsigned char *pack, const struct pcap_pkthdr *hdr) {
     packet = pack;
     header = hdr;
     readEthHdr();
@@ -13,9 +15,11 @@ Packet::Packet(const unsigned char *pack, const struct pcap_pkthdr *hdr){
     readProto();
 };
 
-const char *Packet::getPayload(){
+const char *Packet::getPayload() {
     return payload;
 }
+
+// private:
 
 // Take data from packet address and put it into ether_header struct
 void Packet::readEthHdr() {
@@ -24,14 +28,14 @@ void Packet::readEthHdr() {
 
 // Same principe with ether_header, but address of IP header is behind the address of Eth header,
 // so add size of Eth header to the packet address for get IP data
-void Packet::readIpHdr(){
+void Packet::readIpHdr() {
     packetOptions.ipData = (struct ip *)(packet + SIZE_ETH);
 }
 
 // Same principe, but
 // length of ip, tcp, or udp header is a count of 4-byte words in the special field,
 // like ip_hl, or th_off. Need to multiply this count on 4 to get size in bytes
-void Packet::readProto(){
+void Packet::readProto() {
     if(packetOptions.ipData->ip_p == IPPROTO_TCP)
     {
         packetOptions.tcpData = (struct tcphdr *)(packet + SIZE_ETH + packetOptions.ipData->ip_hl*4);

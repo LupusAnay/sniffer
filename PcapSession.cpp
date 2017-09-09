@@ -7,18 +7,17 @@
 
 // public:
 
-void PcapSession::startSession(const char *filter, char *device_name, unsigned int packet_count){
+void PcapSession::startSession(const char *filter, char *device_name, unsigned int packet_count) {
     descriptor = initPcapSession(filter, device_name);
     startSniffing(packet_count);
 }
 
-void PcapSession::closeSession(){
+void PcapSession::closeSession() {
     pcap_close(descriptor);
 }
 
 // private:
-pcap_t *PcapSession::initPcapSession(const char *filter, char *device_name)
-{
+pcap_t *PcapSession::initPcapSession(const char *filter, char *device_name) {
     bpf_u_int32 mask, net; // mask and address for our device
     char errorBuf[PCAP_ERRBUF_SIZE]; // string for contain error codes
     struct bpf_program fp{}; // compiled pcap filter
@@ -44,14 +43,12 @@ pcap_t *PcapSession::initPcapSession(const char *filter, char *device_name)
     return handle;
 }
 
-void PcapSession::startSniffing(unsigned int packet_count)
-{
+void PcapSession::startSniffing(unsigned int packet_count) {
     pcap_loop(descriptor, packet_count, &loopCallback, nullptr);
 }
 
-void PcapSession::loopCallback(unsigned char *args, const struct pcap_pkthdr *header, const unsigned char *pack)
-{
-    cout << "\nWe got a packet! The data: " << endl;
+void PcapSession::loopCallback(unsigned char *args, const struct pcap_pkthdr *header, const unsigned char *pack) {
+    cout << "We got a packet! The data: " << endl;
     Packet packet = Packet(pack, header);
     cout << packet.getPayload() << endl;
 }

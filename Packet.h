@@ -16,12 +16,12 @@ using namespace std;
 class Packet {
 public:
     Packet(const unsigned char *pack, const struct pcap_pkthdr *hdr);
+    static const int SIZE_ETH;
     const char *getPayload();
 private:
-    static const int SIZE_ETH = 14; // Size of Ethernet header is always 14
     const unsigned char *packet;
 
-    struct PacketOptions{
+    struct PacketOptions {
         ether_header *ethData{};
         ip *ipData{};
         tcphdr *tcpData{};
